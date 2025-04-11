@@ -17,8 +17,8 @@ const createANewUser = asyncHandler(async (req, res) => {
 
     const hashedPassword = await bcryptjs.hash(newUserData.password, 10);
 
-    const result = await prismaClient.$transaction(async (prisma) => {
-        const profile = await prisma.profile.create({
+    const result = await prismaClient.$transaction(async (prismaClient) => {
+        const profile = await prismaClient.profile.create({
             data: {
                 name: newUserData.name,
                 mobile: newUserData.mobile,
@@ -26,7 +26,7 @@ const createANewUser = asyncHandler(async (req, res) => {
             },
         });
 
-        const user = await prisma.user.create({
+        const user = await prismaClient.user.create({
             data: {
                 email: newUserData.email,
                 password: hashedPassword,
@@ -35,7 +35,7 @@ const createANewUser = asyncHandler(async (req, res) => {
             include: { profile: true }
         });
 
-        await prisma.profile.update({
+        await prismaClient.profile.update({
             where: { id: profile.id },
             data: { userId: user.id }
         });
