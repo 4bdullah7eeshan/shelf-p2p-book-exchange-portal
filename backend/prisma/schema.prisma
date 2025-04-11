@@ -11,6 +11,9 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
 
+  email String
+  password String
+
   // Relationships
   profile Profile @relation(fields: [profileId], references: [id])
   profileId Int @unique
@@ -23,9 +26,8 @@ model Profile {
   id Int @id @default(autoincrement())
 
   name String
-  mobileNumber String
-  email String
-  password String
+  mobile String
+  
   role Role
 
   // Relationships
