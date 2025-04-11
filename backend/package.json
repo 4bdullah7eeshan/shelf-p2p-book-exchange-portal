@@ -1,12 +1,41 @@
 {
-  "name": "backend",
+  "name": "shelf-p2p-book-exchange-portal-backend",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "Backend for Shelf's P2P Book Exchange Portal",
+  "keywords": [
+    "book-exchange-portal",
+    "backend",
+    "express",
+    "postgresql",
+    "prisma-orm"
+  ],
+  "homepage": "https://github.com/4bdullah7eeshan/shelf-p2p-book-exchange-portal/backend",
+  "bugs": {
+    "url": "https://github.com/4bdullah7eeshan/shelf-p2p-book-exchange-portal/issues",
+    "email": "4bdullah7eeshan@gmail.com"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Abdullah Zeeshan",
+    "email": "4bdullah7eeshan@gmail.com",
+    "url": "https://4bdullah7eeshan.github.io"
+  },
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4bdullah7eeshan/shelf-p2p-book-exchange-portal"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development && node --watch main.js",
+    "test": "NODE_ENV=test && jest"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "os": [
+    "linux",
+    "darwin",
+    "win32"
+  ],
+  "private": true
 }
