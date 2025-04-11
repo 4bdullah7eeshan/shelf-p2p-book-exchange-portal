@@ -39,6 +39,7 @@ model Book {
   author String
   genre String // Make it enum?
   city String
+  coverUrl String 
 
   // Relationships
   ownerId Int @unique
