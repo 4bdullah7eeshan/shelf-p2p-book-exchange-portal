@@ -15,3 +15,7 @@ const validateTokenPresence = (req, res, next) => {
         });
     }
 };
+
+module.exports = {
+    validateTokenPresence,
+}
