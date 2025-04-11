@@ -7,3 +7,16 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id Int @id @default(autoincrement())
+}
+
+model Profile {
+  id Int @id @default(autoincrement())
+}
+
+model Book {
+  id Int @id @default(autoincrement())
+}
+
