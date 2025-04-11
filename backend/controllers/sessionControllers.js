@@ -37,3 +37,14 @@ const signInAUser = asyncHandler(async (req, res) => {
     }
 
 });
+
+
+const signOutAUser = asyncHandler(async (req, res) => {
+    // handler later
+
+});
+
+module.exports = {
+    signInAUser,
+    signOutAUser,
+}
