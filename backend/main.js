@@ -1,6 +1,8 @@
+const { PORT, NODE_ENV } = require("./config/index");
 const app = require("./app");
 
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Express app running on PORT: ${PORT}!`);
-});
+if (NODE_ENV != "test") {
+    app.listen(PORT, () => {
+        console.log(`Express app running on PORT: ${PORT}!`);
+    });
+}
