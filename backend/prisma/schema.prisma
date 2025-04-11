@@ -10,6 +10,10 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
+
+  // Relationships
+  profile Profile @relation(fields: [profileId], references: [id])
+  profileId Int @unique
 }
 
 model Profile {
@@ -20,6 +24,9 @@ model Profile {
   email String
   password String
   role Role
+
+  // Relationships
+  user User?
 }
 
 model Book {
