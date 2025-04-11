@@ -50,8 +50,8 @@ model Book {
   ownerId Int @unique
   owner User @relation("OwnedBooks", fields: [ownerId], references: [id])
 
-  seekerId Int @unique 
-  seeker User @relation("SeekedBooks", fields: [seekerId], references: [id])
+  seekerId Int? 
+  seeker User? @relation("SeekedBooks", fields: [seekerId], references: [id])
 }
 
 enum Role {
