@@ -15,7 +15,7 @@ const createANewUser = asyncHandler(async (req, res) => {
         return res.status(400).json({ error: "User already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(newUserData.password, 10);
+    const hashedPassword = await bcryptjs.hash(newUserData.password, 10);
 
     const result = await prismaClient.$transaction(async (prisma) => {
         const profile = await prisma.profile.create({
