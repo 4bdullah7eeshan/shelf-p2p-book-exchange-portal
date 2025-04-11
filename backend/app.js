@@ -2,6 +2,11 @@ const express = require("express");
 const cors = require("cors");
 
 // Import routers here
+const {
+    sessionRouter,
+    userRouter,
+    bookRouter,
+} = require("./routes/index");
 
 const app = express();
 
@@ -12,6 +17,9 @@ app.use(express.urlencoded({
 }));
 
 // Use routes here
+app.use("/v1/sessions", sessionRouter);
+app.use("/v1/users", userRouter);
+app.use("/v1/books", bookRouter);
 
 app.use((err, req, res, next) => {
     console.error(err);
