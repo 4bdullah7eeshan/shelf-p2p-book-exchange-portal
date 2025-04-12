@@ -16,9 +16,12 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
+    const [editingBook, setEditingBook] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('user'));
-        
+
         if (!userData) {
             router.push('/sign-in');
             return;
@@ -30,14 +33,14 @@ export default function Dashboard() {
 
     const fetchBooks = async (role, userId) => {
         try {
-            const endpoint = role === 'OWNER' 
-                ? `http://localhost:3001/v1/books/owner?userId=${userId}` 
+            const endpoint = role === 'OWNER'
+                ? `http://localhost:3001/v1/books/owner?userId=${userId}`
                 : `http://localhost:3001/v1/books/rented?userId=${userId}`;
 
             const response = await fetch(endpoint);
 
             if (!response.ok) throw new Error('Failed to fetch books');
-            
+
             const data = await response.json();
             setBooks(data);
         } catch (err) {
@@ -52,7 +55,7 @@ export default function Dashboard() {
         setLoading(true);
         const user = JSON.parse(localStorage.getItem('user'));
 
-        
+
         try {
             const response = await fetch('http://localhost:3001/v1/books', {
                 method: 'POST',
@@ -66,7 +69,7 @@ export default function Dashboard() {
             });
 
             if (!response.ok) throw new Error('Failed to add book');
-            
+
             const data = await response.json();
             setBooks([...books, data]);
             setNewBook({ title: '', author: '', genre: '', city: '', contact: '' });
@@ -74,6 +77,42 @@ export default function Dashboard() {
             setError(err.message);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleUpdateBook = async (bookId, updatedData) => {
+        try {
+            const response = await fetch(`http://localhost:3001/v1/books/${bookId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedData)
+            });
+
+            if (!response.ok) throw new Error('Failed to update book');
+
+            setBooks(books.map(book =>
+                book.id === bookId ? { ...book, ...updatedData } : book
+            ));
+            setIsEditing(false);
+            setEditingBook(null);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    const handleDeleteBook = async (bookId) => {
+        if (!confirm("Are you sure you want to delete this book?")) return;
+
+        try {
+            const response = await fetch(`http://localhost:3001/v1/books/${bookId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) throw new Error('Failed to delete book');
+
+            setBooks(books.filter(book => book.id !== bookId));
+        } catch (err) {
+            setError(err.message);
         }
     };
 
@@ -101,7 +140,7 @@ export default function Dashboard() {
                                         required
                                         className="w-full p-2 border rounded"
                                         value={newBook.title}
-                                        onChange={(e) => setNewBook({...newBook, title: e.target.value})}
+                                        onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
                                     />
                                 </div>
                                 <div>
@@ -111,7 +150,7 @@ export default function Dashboard() {
                                         required
                                         className="w-full p-2 border rounded"
                                         value={newBook.author}
-                                        onChange={(e) => setNewBook({...newBook, author: e.target.value})}
+                                        onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
                                     />
                                 </div>
                                 <div>
@@ -120,7 +159,7 @@ export default function Dashboard() {
                                         type="text"
                                         className="w-full p-2 border rounded"
                                         value={newBook.genre}
-                                        onChange={(e) => setNewBook({...newBook, genre: e.target.value})}
+                                        onChange={(e) => setNewBook({ ...newBook, genre: e.target.value })}
                                     />
                                 </div>
                                 <div>
@@ -130,7 +169,7 @@ export default function Dashboard() {
                                         required
                                         className="w-full p-2 border rounded"
                                         value={newBook.city}
-                                        onChange={(e) => setNewBook({...newBook, city: e.target.value})}
+                                        onChange={(e) => setNewBook({ ...newBook, city: e.target.value })}
                                     />
                                 </div>
                             </div>
@@ -149,7 +188,24 @@ export default function Dashboard() {
                         <h2 className="text-xl font-semibold mb-4">Your Listed Books</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {books.map(book => (
-                                <div key={book.id} className="border p-4 rounded-lg">
+                                <div key={book.id} className="relative border p-4 rounded-lg">
+                                    <div className="absolute top-2 right-2 space-x-2">
+                                        <button
+                                            onClick={() => {
+                                                setEditingBook(book);
+                                                setIsEditing(true);
+                                            }}
+                                            className="text-blue-500 hover:text-blue-700"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteBook(book.id)}
+                                            className="text-red-500 hover:text-red-700"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
                                     <h3 className="font-semibold text-lg">{book.title}</h3>
                                     <p className="text-gray-600">{book.author}</p>
                                     <div className="mt-2 text-sm">
@@ -161,6 +217,108 @@ export default function Dashboard() {
                             ))}
                         </div>
                     </section>
+
+                    {isEditing && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                            <div className="bg-white p-6 rounded-lg w-96">
+                                <h2 className="text-xl font-semibold mb-4">Edit Book</h2>
+                                <form onSubmit={(e) => {
+                                    e.preventDefault();
+                                    handleUpdateBook(editingBook.id, {
+                                        title: editingBook.title,
+                                        author: editingBook.author,
+                                        genre: editingBook.genre,
+                                        city: editingBook.city,
+                                        status: editingBook.status
+                                    });
+                                }}>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label>Title *</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                className="w-full p-2 border rounded"
+                                                value={editingBook.title}
+                                                onChange={(e) => setEditingBook({
+                                                    ...editingBook,
+                                                    title: e.target.value
+                                                })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block mb-1">Author *</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                className="w-full p-2 border rounded"
+                                                value={editingBook.author}
+                                                onChange={(e) => setEditingBook({
+                                                    ...editingBook,
+                                                    author: e.target.value
+                                                })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block mb-1">Genre</label>
+                                            <input
+                                                type="text"
+                                                className="w-full p-2 border rounded"
+                                                value={editingBook.genre || ''}
+                                                onChange={(e) => setEditingBook({
+                                                    ...editingBook,
+                                                    genre: e.target.value
+                                                })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block mb-1">City *</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                className="w-full p-2 border rounded"
+                                                value={editingBook.city}
+                                                onChange={(e) => setEditingBook({
+                                                    ...editingBook,
+                                                    city: e.target.value
+                                                })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label>Status</label>
+                                            <select
+                                                className="w-full p-2 border rounded"
+                                                value={editingBook.status}
+                                                onChange={(e) => setEditingBook({
+                                                    ...editingBook,
+                                                    status: e.target.value
+                                                })}
+                                            >
+                                                <option value="AVAILABLE">Available</option>
+                                                <option value="RENTED">Rented</option>
+                                                <option value="EXCHANGED">Exchanged</option>
+                                            </select>
+                                        </div>
+                                        <div className="flex justify-end space-x-2">
+                                            <button
+                                                type="button"
+                                                onClick={() => setIsEditing(false)}
+                                                className="px-4 py-2 border rounded"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                type="submit"
+                                                className="px-4 py-2 bg-blue-500 text-white rounded"
+                                            >
+                                                Save Changes
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
                 </div>
             ) : (
                 /* Seeker's Rented Books */

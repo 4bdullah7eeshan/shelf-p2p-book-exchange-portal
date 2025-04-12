@@ -51,14 +51,12 @@ const getABookById = asyncHandler(async (req, res) => {
 });
 
 const updateABook = asyncHandler(async (req, res) => {
-    const updatedBookId = req.params.bookId;
-    const updatedBookData = req.body;
+    const bookId = parseInt(req.params.bookId);
+    const { title, author, genre, city, status } = req.body;
 
     const updatedBook = await prismaClient.book.update({
-        where: {
-            id: updatedBookId,
-        },
-        data: updatedBookData,
+        where: { id: bookId },
+        data: { title, author, genre, city, status }
     });
 
     res.status(200).json(updatedBook);
