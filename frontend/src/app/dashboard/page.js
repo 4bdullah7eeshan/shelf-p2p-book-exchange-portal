@@ -22,6 +22,9 @@ export default function Dashboard() {
     const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
 
+    const [activeSection, setActiveSection] = useState('home');
+
+
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('user'));
 
@@ -132,71 +135,115 @@ export default function Dashboard() {
         }
     };
 
-    if (!user) return <div>Loading...</div>;
+    const SidebarButton = ({ icon, label, section }) => (
+        <button
+            onClick={() => setActiveSection(section)}
+            className={`w-full p-4 text-left flex items-center space-x-3 hover:bg-gray-100 rounded-lg ${activeSection === section ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                }`}
+        >
+            <span className="text-xl">{icon}</span>
+            <span>{label}</span>
+        </button>
+    );
 
-    return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-3xl font-bold mb-6">
-                Welcome, {user.name} ({user.role})
-            </h1>
+    const renderContent = () => {
+        switch (activeSection) {
+            case 'home':
+                return (
+                    <div className="p-6">
+                        <h2 className="text-2xl font-bold mb-4">Home</h2>
+                        <p className="text-gray-600">
+                            {user?.role === 'OWNER'
+                                ? "Manage your book listings and track their status here."
+                                : "Browse your rented books and discover new ones."}
+                        </p>
+                    </div>
+                );
 
-            {error && <div className="text-red-500 mb-4 p-3 bg-red-50 rounded">{error}</div>}
-
-            {user.role === 'OWNER' ? (
-                <div className="space-y-8">
-                    {/* Owner's Book List */}
-                    <section>
-                        <h2 className="text-xl font-semibold mb-4">Your Listed Books</h2>
+            case 'view':
+                return user?.role === 'OWNER' ? (
+                    <section className="p-6">
+                        <h2 className="text-2xl font-bold mb-6">Listed Books</h2>
+                        {/* Existing book list rendering */}
                         {books.length === 0 ? (
-        <div className="text-center p-8 bg-gray-50 rounded-lg">
-            <p className="text-gray-500">No books listed yet. Add your first book to get started!</p>
-        </div>
-    ) : (
+                            <div className="text-center p-8 bg-gray-50 rounded-lg">
+                                <p className="text-gray-500">No books listed yet. Add your first book to get started!</p>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {books.map(book => (
+                                    <div key={book.id} className="relative border p-4 rounded-lg">
+                                        {book.coverUrl && (
+                                            <img
+                                                src={book.coverUrl}
+                                                alt={book.title}
+                                                className="w-full h-48 object-cover mb-4 rounded"
+                                                loading="lazy"
+                                            />
+                                        )}
+                                        <div className="absolute top-2 right-2 space-x-2">
+                                            <button
+                                                onClick={() => {
+                                                    setEditingBook(book);
+                                                    setIsEditing(true);
+                                                }}
+                                                className="text-blue-500 hover:text-blue-700"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeleteBook(book.id)}
+                                                className="text-red-500 hover:text-red-700"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                        <h3 className="font-semibold text-lg">{book.title}</h3>
+                                        <p className="text-gray-600">{book.author}</p>
+                                        <div className="mt-2 text-sm">
+                                            <p>Genre: {book.genre || '-'}</p>
+                                            <p>Location: {book.city}</p>
+                                            <p>Status: {book.status}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </section>
+                ) : (
+                    <section className="p-6">
+                        <h2 className="text-2xl font-bold mb-6">Your Rented Books</h2>
+                        {/* Existing rented books rendering */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {books.map(book => (
-                                <div key={book.id} className="relative border p-4 rounded-lg">
+                                <div key={book.id} className="border p-4 rounded-lg">
                                     {book.coverUrl && (
-                                        <img 
-                                            src={book.coverUrl} 
+                                        <img
+                                            src={book.coverUrl}
                                             alt={book.title}
                                             className="w-full h-48 object-cover mb-4 rounded"
                                             loading="lazy"
                                         />
                                     )}
-                                    <div className="absolute top-2 right-2 space-x-2">
-                                        <button
-                                            onClick={() => {
-                                                setEditingBook(book);
-                                                setIsEditing(true);
-                                            }}
-                                            className="text-blue-500 hover:text-blue-700"
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeleteBook(book.id)}
-                                            className="text-red-500 hover:text-red-700"
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
                                     <h3 className="font-semibold text-lg">{book.title}</h3>
                                     <p className="text-gray-600">{book.author}</p>
                                     <div className="mt-2 text-sm">
-                                        <p>Genre: {book.genre || '-'}</p>
-                                        <p>Location: {book.city}</p>
-                                        <p>Status: {book.status}</p>
+                                        <p>Owner: {book.owner.name}</p>
+                                        <p>Contact: {book.contact}</p>
+                                        <p>Due Date: {book.dueDate || 'N/A'}</p>
                                     </div>
                                 </div>
                             ))}
+                            {books.length === 0 && <p>No rented books found</p>}
                         </div>
-    )}</section>
+                    </section>
+                );
 
-                    <hr />
-
-                    {/* Add Book Form */}
-                    <section className="bg-white p-6 rounded-lg shadow-sm">
-                        <h2 className="text-xl font-semibold mb-4">Add New Book</h2>
+            case 'add':
+                return (
+                    <section className="p-6">
+                        <h2 className="text-2xl font-bold mb-6">Add New Book</h2>
+                        {/* Existing add book form */}
                         <form onSubmit={handleAddBook} className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
@@ -240,23 +287,23 @@ export default function Dashboard() {
                                 </div>
 
                                 <div>
-                                <label className="block mb-2">Cover Image</label>
-                                <div className="flex items-center gap-4">
-                                    <input
-                                        type="file"
-                                        onChange={handleFileChange}
-                                        accept="image/*"
-                                        className="w-full p-2 border rounded"
-                                    />
-                                    {previewUrl && (
-                                        <img
-                                            src={previewUrl}
-                                            alt="Preview"
-                                            className="w-20 h-20 object-cover rounded"
+                                    <label className="block mb-2">Cover Image</label>
+                                    <div className="flex items-center gap-4">
+                                        <input
+                                            type="file"
+                                            onChange={handleFileChange}
+                                            accept="image/*"
+                                            className="w-full p-2 border rounded"
                                         />
-                                    )}
+                                        {previewUrl && (
+                                            <img
+                                                src={previewUrl}
+                                                alt="Preview"
+                                                className="w-20 h-20 object-cover rounded"
+                                            />
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                             <button
                                 type="submit"
@@ -267,11 +314,72 @@ export default function Dashboard() {
                             </button>
                         </form>
                     </section>
+                );
 
-                    
+            default:
+                return null;
+        }
+    };
 
+    if (!user) return <div>Loading...</div>;
+
+    return (
+        <div className="flex min-h-screen">
+            
+            {/* Sidebar */}
+            <div className="w-64 border-r p-4">
+                <div className="space-y-2">
+                    <h2 className="text-xl font-bold px-4 py-2">Welcome {user.name}!</h2>
+                    <div className="border-b mb-4"></div>
+
+                    <SidebarButton
+                        icon="🏠"
+                        label="Home"
+                        section="home"
+                    />
+
+                    {user.role === 'OWNER' ? (
+                        <>
+                            <SidebarButton
+                                icon="📚"
+                                label="Listed Books"
+                                section="view"
+                            />
+                            <SidebarButton
+                                icon="➕"
+                                label="Rent A New Book"
+                                section="add"
+                            />
+                        </>
+                    ) : (
+                        <SidebarButton
+                            icon="📖"
+                            label="Rented Books"
+                            section="view"
+                        />
+                    )}
+                </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="flex-1 p-8">
+                <div className="max-w-6xl mx-auto">
+                    <h1 className="text-2xl font-bold mb-6">
+                        Dashboard
+                    </h1>
+
+                    {error && (
+                        <div className="text-red-500 mb-4 p-3 bg-red-50 rounded">
+                            {error}
+                        </div>
+                    )}
+
+                    {renderContent()}
+
+                    {/* Edit Modal (remains the same) */}
                     {isEditing && (
                         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                            {/* Existing edit modal content */}
                             <div className="bg-white p-6 rounded-lg w-96">
                                 <h2 className="text-xl font-semibold mb-4">Edit Book</h2>
                                 <form onSubmit={(e) => {
@@ -372,34 +480,8 @@ export default function Dashboard() {
                         </div>
                     )}
                 </div>
-            ) : (
-                /* Seeker's Rented Books */
-                <section>
-                    <h2 className="text-xl font-semibold mb-4">Your Rented Books</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {books.map(book => (
-                            <div key={book.id} className="border p-4 rounded-lg">
-                                {book.coverUrl && (
-                                    <img 
-                                        src={book.coverUrl} 
-                                        alt={book.title}
-                                        className="w-full h-48 object-cover mb-4 rounded"
-                                        loading="lazy"
-                                    />
-                                )}
-                                <h3 className="font-semibold text-lg">{book.title}</h3>
-                                <p className="text-gray-600">{book.author}</p>
-                                <div className="mt-2 text-sm">
-                                    <p>Owner: {book.owner.name}</p>
-                                    <p>Contact: {book.contact}</p>
-                                    <p>Due Date: {book.dueDate || 'N/A'}</p>
-                                </div>
-                            </div>
-                        ))}
-                        {books.length === 0 && <p>No rented books found</p>}
-                    </div>
-                </section>
-            )}
+            </div>
+            
         </div>
     );
 };
