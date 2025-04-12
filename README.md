@@ -6,7 +6,7 @@ A peer-to-peer book exchange portal.
 
 **Fable Flow** is a mini full stack app that connects book owners and book seekers.
 
-See it live: 
+**[See it live!](https://shelf-p2p-book-exchange-portal.vercel.app/)**
 
 ## Screenshots
 
