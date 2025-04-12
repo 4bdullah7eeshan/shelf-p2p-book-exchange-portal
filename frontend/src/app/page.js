@@ -18,7 +18,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="text-center py-20 px-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl font-bold text-blue-600 mb-6">
+          <h1 className="text-5xl font-bold text-blue-600 mb-6 bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
             Welcome to Fable Flow
           </h1>
           <p className="text-xl text-gray-600 mb-8">

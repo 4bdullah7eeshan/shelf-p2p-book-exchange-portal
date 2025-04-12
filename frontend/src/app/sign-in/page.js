@@ -48,7 +48,7 @@ export default function SignIn() {
     };
 
     return (
-        <div className="max-w-md mx-auto p-4">
+        <div className="max-w-md mx-auto p-5 m-5 border">
             <h1 className="text-2xl text-center font-bold mb-4">Sign In</h1>
             {error && <div className="text-red-500 mb-4 p-2 rounded bg-red-50">{error}</div>}
 
