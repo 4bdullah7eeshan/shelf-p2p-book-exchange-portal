@@ -9,7 +9,21 @@ const verifyJwtToken = asyncHandler(async (req, res, next) => {
             process.env.JWT_SECRET
         );
         
-        req.user = decoded;
+        const user = await prismaClient.user.findUnique({
+            where: { id: decoded.id },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                role: true
+            }
+        });
+
+        if (!user) {
+            return res.status(403).json({ message: 'Invalid token' });
+        }
+
+        req.user = user;
         next();
     } catch (err) {
         // Handle specific JWT errors

@@ -11,7 +11,11 @@ const createANewBook = asyncHandler(async (req, res) => {
     const newBookData = req.body;
 
     const newBook = await prismaClient.book.create({
-        data: newBookData,
+        data: {
+            ...newBookData,
+            ownerId: req.user.id,
+            status: 'AVAILABLE',
+        }
     });
 
     res.status(200).json(newBook);
@@ -55,10 +59,41 @@ const deleteABook = asyncHandler(async (req, res) => {
     res.status(200).json(deletedBook);
 });
 
+const getOwnerBooks = asyncHandler(async (req, res) => {
+    const ownerBooks = await prismaClient.book.findMany({
+        where: { ownerId: req.user.id },
+        include: { owner: true }
+    });
+
+    res.json(ownerBooks);
+});
+
+const getRentedBooksOfASeeker = asyncHandler(async (req, res) => {
+    const rentedBooks = await prismaClient.book.findMany({
+        where: { 
+            seekerId: req.user.id,
+            status: 'RENTED',
+        },
+        include: { 
+            owner: {
+                select: {
+                    name: true,
+                    email: true,
+                    mobile: true
+                }
+            }
+        }
+    });
+
+    res.json(rentedBooks);
+});
+
 module.exports = {
     getAllBooks,
     createANewBook,
     getABookById,
     updateABook,
     deleteABook,
+    getOwnerBooks,
+    getRentedBooksOfASeeker,
 }
