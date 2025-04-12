@@ -38,7 +38,7 @@ export default function Explore() {
 
     return (
         <div className="container mx-auto p-4">
-            <h1 className="text-3xl font-bold mb-6">Explore Available Books</h1>
+            <h1 className="text-3xl font-bold mb-6">Explore</h1>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {books.map(book => (
@@ -49,7 +49,7 @@ export default function Explore() {
     <img 
         src={book.coverUrl} 
         alt={book.title}
-        className="mb-4 rounded w-full h-100 object-cover rounded-lg shadow-sm"
+        className="rounded w-full h-100 object-cover rounded-lg shadow-sm"
         loading="lazy"
     />
 )}
@@ -74,7 +74,7 @@ export default function Explore() {
                         </div>
 
                         <div className="mt-4 border-t p-4">
-                            <h3 className="font-medium mb-2">Owner Details:</h3>
+                            <h3 className="mb-2">Owner Details</h3>
                             <div className="space-y-1 text-sm">
                                 <div>{book.owner.name}</div>
                                 <div className="text-blue-600">{book.owner.email}</div>
