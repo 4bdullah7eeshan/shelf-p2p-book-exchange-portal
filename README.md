@@ -8,6 +8,8 @@ A peer-to-peer book exchange portal.
 
 **[See it live!](https://shelf-p2p-book-exchange-portal.vercel.app/)**
 
+**[Watch Demo Video](https://www.loom.com/share/11851383f86843f58f2d815fa72d4e00)**
+
 ## Screenshots
 
 ### General
@@ -123,10 +125,6 @@ A peer-to-peer book exchange portal.
 
 
 > Pending: Searching/filtering books by title or location
-
-
-
-## Deployment Links
 
 
 ## High Level System Design
