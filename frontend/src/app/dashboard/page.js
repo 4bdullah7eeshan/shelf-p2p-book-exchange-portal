@@ -172,38 +172,67 @@ export default function Dashboard() {
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {books.map(book => (
-                                    <div key={book.id} className="relative border p-4 rounded-lg">
-                                        {book.coverUrl && (
-                                            <img
-                                                src={book.coverUrl}
-                                                alt={book.title}
-                                                className="w-full h-48 object-cover mb-4 rounded"
-                                                loading="lazy"
-                                            />
-                                        )}
-                                        <div className="absolute top-2 right-2 space-x-2">
-                                            <button
-                                                onClick={() => {
-                                                    setEditingBook(book);
-                                                    setIsEditing(true);
-                                                }}
-                                                className="text-blue-500 hover:text-blue-700"
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                onClick={() => handleDeleteBook(book.id)}
-                                                className="text-red-500 hover:text-red-700"
-                                            >
-                                                Delete
-                                            </button>
-                                        </div>
-                                        <h3 className="font-semibold text-lg">{book.title}</h3>
-                                        <p className="text-gray-600">{book.author}</p>
-                                        <div className="mt-2 text-sm">
-                                            <p>Genre: {book.genre || '-'}</p>
-                                            <p>Location: {book.city}</p>
-                                            <p>Status: {book.status}</p>
+                                    <div key={book.id} className="relative border p-4 rounded-lg hover:shadow-lg transition-shadow">
+                                        <div className='relative mb-4'>
+                                            {book.coverUrl && (
+                                                <img
+                                                    src={book.coverUrl}
+                                                    alt={book.title}
+                                                    className="w-full h-100 object-cover rounded-lg shadow-sm"
+                                                    loading="lazy"
+                                                />
+                                            )}
+
+                                            <h3 className="font-semibold text-lg">{book.title}</h3>
+                                            <p className="text-gray-600">{book.author}</p>
+                                            <div className="mt-2 text-sm">
+                                                <p>Genre: {book.genre || '-'}</p>
+                                                <p>Location: {book.city}</p>
+                                                <p>Status: {book.status}</p>
+                                            </div>
+                                            <div className="flex justify-between align-center">
+                                                <button
+                                                    onClick={() => {
+                                                        setEditingBook(book);
+                                                        setIsEditing(true);
+                                                    }}
+                                                    className="p-1.5 rounded-full bg-white/90 hover:bg-white transition-colors shadow-sm hover:scale-105"
+                                                    aria-label="Edit book"
+                                                >
+                                                    <svg
+                                                        className="w-5 h-5 text-blue-600"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteBook(book.id)}
+                                                    className="p-1.5 rounded-full bg-white/90 hover:bg-white transition-colors shadow-sm hover:scale-105"
+                                                    aria-label="Delete book"
+                                                >
+                                                    <svg
+                                                        className="w-5 h-5 text-red-600"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
@@ -325,7 +354,7 @@ export default function Dashboard() {
 
     return (
         <div className="flex min-h-screen">
-            
+
             {/* Sidebar */}
             <div className="w-64 border-r p-4">
                 <div className="space-y-2">
@@ -481,7 +510,7 @@ export default function Dashboard() {
                     )}
                 </div>
             </div>
-            
+
         </div>
     );
 };

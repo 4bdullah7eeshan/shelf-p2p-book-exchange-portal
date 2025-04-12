@@ -42,22 +42,22 @@ export default function Explore() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {books.map(book => (
-                    <div key={book.id} className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
-                        <div className="mb-4">
-                            <h2 className="text-xl font-semibold">{book.title}</h2>
-                            <p className="text-gray-600">{book.author}</p>
-                        </div>
+                    <div key={book.id} className="border rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                        
 
                         {book.coverUrl && (
     <img 
         src={book.coverUrl} 
         alt={book.title}
-        className="w-full h-48 object-cover mb-4 rounded"
+        className="mb-4 rounded w-full h-100 object-cover rounded-lg shadow-sm"
         loading="lazy"
     />
 )}
-                        
-                        <div className="space-y-2 text-sm">
+                        <div className="p-4">
+                            <h2 className="text-xl font-semibold">{book.title}</h2>
+                            <p className="text-gray-600">{book.author}</p>
+                        </div>
+                        <div className="space-y-2 text-sm pl-4">
                             <div>
                                 <span className="font-medium">Genre:</span> {book.genre || 'N/A'}
                             </div>
@@ -73,7 +73,7 @@ export default function Explore() {
                             </div>
                         </div>
 
-                        <div className="mt-4 pt-4 border-t">
+                        <div className="mt-4 border-t p-4">
                             <h3 className="font-medium mb-2">Owner Details:</h3>
                             <div className="space-y-1 text-sm">
                                 <div>{book.owner.name}</div>
