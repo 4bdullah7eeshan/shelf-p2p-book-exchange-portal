@@ -2,7 +2,17 @@ const asyncHandler = require("express-async-handler");
 const { prismaClient } = require("../prisma/client");
 
 const getAllBooks = asyncHandler(async (req, res) => {
-    const allBooks = prismaClient.book.findMany();
+    const allBooks = await prismaClient.book.findMany({
+        include: {
+            owner: {
+                select: {
+                    name: true,
+                    email: true,
+                    mobile: true
+                }
+            }
+        }
+    });
 
     res.status(200).json(allBooks);
 });
