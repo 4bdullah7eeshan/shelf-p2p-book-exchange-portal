@@ -1,10 +1,21 @@
 "use client";
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 
 export default function Explore() {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+
+    const router = useRouter();
+
+    useEffect(() => {
+        const user = localStorage.getItem('user');
+        if (!user) {
+          router.push('/');
+        }
+      }, [router]);
 
     useEffect(() => {
         const fetchBooks = async () => {
