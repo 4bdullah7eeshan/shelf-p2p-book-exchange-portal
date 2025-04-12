@@ -19,8 +19,11 @@ model User {
   
   role Role
 
+  // Relationships
   ownedBooks Book[] @relation("OwnedBooks")
-  seekedBooks Book[] @relation("SeekedBooks")
+  seekedBooks Book[] @relation("SeekedBooks") // Not used
+
+  @@map("users")
 }
 
 
@@ -29,19 +32,20 @@ model Book {
 
   title String
   author String
-  genre String // Make it enum?
-  coverUrl String? @default("https://cdn.pixabay.com/photo/2018/01/03/09/09/book-3057902_1280.png")
+  genre String
+  coverUrl String? @default("https://cdn.pixabay.com/photo/2018/01/03/09/09/book-3057902_1280.png") @map("cover_url")
+  
   status Status @default(AVAILABLE)
-
   city String
 
-
   // Relationships
-  ownerId Int
+  ownerId Int @map("owner_id")
   owner User @relation("OwnedBooks", fields: [ownerId], references: [id])
 
-  seekerId Int? 
+  seekerId Int? @map("seeker_id")
   seeker User? @relation("SeekedBooks", fields: [seekerId], references: [id])
+
+  @@map("books")
 }
 
 enum Role {
