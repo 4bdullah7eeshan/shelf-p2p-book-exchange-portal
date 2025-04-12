@@ -8,18 +8,17 @@ const {
     getOwnerBooks,
     getRentedBooksOfASeeker,
 } = require("../controllers/bookControllers");
-const jwtAuthChain = require("../middlewares/jwtAuthChain");
 
 const bookRouter = Router();
 
 bookRouter.get("/", getBooks);
 
-bookRouter.get("/owner", jwtAuthChain, getOwnerBooks);
-bookRouter.get("/rented", jwtAuthChain, getRentedBooksOfASeeker);
+bookRouter.get("/owner", getOwnerBooks);
+bookRouter.get("/rented", getRentedBooksOfASeeker);
 bookRouter.get("/:bookId", getABookById);
-bookRouter.post("/", jwtAuthChain, createANewBook);
-bookRouter.put("/:bookId", jwtAuthChain, updateABook);
-bookRouter.delete("/:bookId", jwtAuthChain, deleteABook);
+bookRouter.post("/", createANewBook);
+bookRouter.put("/:bookId", updateABook);
+bookRouter.delete("/:bookId", deleteABook);
 
 
 

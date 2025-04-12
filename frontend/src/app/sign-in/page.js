@@ -32,8 +32,7 @@ export default function SignIn() {
                 throw new Error(data.message || 'Sign in failed');
             }
 
-            // Store token and user data
-            localStorage.setItem('authToken', data.token);
+            // Store user data
             localStorage.setItem('user', JSON.stringify(data.user));
 
             // Redirect based on role
