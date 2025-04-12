@@ -47,26 +47,34 @@ export default function SignIn() {
     };
 
     return (
-        <div>
-            <h1>Sign In</h1>
+        <div className="max-w-md mx-auto p-4">
+            <h1 className="text-2xl font-bold mb-4">Sign In</h1>
+            {error && <div className="text-red-500 mb-4 p-2 rounded bg-red-50">{error}</div>}
 
-            <p>Required fields are followed by <strong><span aria-label="required">*</span></strong>.</p>
+
+            <p className="mb-4 text-gray-600">Required fields are followed by <strong><span className="text-red-500" aria-label="required">*</span></strong>.</p>
             
-            <form action="" method="post">
-                <fieldset>
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <fieldset className="space-y-4" disabled={isSubmitting}>
                     <p>
-                        <label htmlFor="user_email">Email: <span aria-label="required">*</span></label>
-                        <input type="email" id="user_email" name="user_email" placeholder="johndoe@example.com" required />
+                        <label className="block mb-2 font-medium" htmlFor="user_email">Email: <span className="text-red-500" aria-label="required">*</span></label>
+                        <input type="email" id="user_email" name="user_email" className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-400" placeholder="johndoe@example.com" required />
                     </p>
 
                     <p>
-                        <label htmlFor="user_password">Password: <span aria-label="required">*</span></label>
-                        <input type="password" id="user_password" name="user_password" minLength="6" required />
+                        <label className="block mb-2 font-medium" htmlFor="user_password">Password: <span className="text-red-500" aria-label="required">*</span></label>
+                        <input className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-400" type="password" id="user_password" name="user_password" minLength="6" required />
                     </p>
                 </fieldset>
                 
                 <p>
-                    <button type="submit">Sign In</button>
+                <button
+                        type="submit"
+                        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors disabled:bg-gray-400"
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? 'Signing In...' : 'Sign In'}
+                </button>
                 </p>
             </form>
         </div>
