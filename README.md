@@ -10,6 +10,82 @@ A peer-to-peer book exchange portal.
 
 ## Screenshots
 
+### General
+
+#### Homepage
+
+<img src="./utils/homepage.png" alt="Homepage" width="400">
+
+---
+
+#### Sign Up Page
+
+<img src="./utils/sign-up-page.png" alt="Sign Up Page" width="400">
+
+
+---
+
+#### Sign In Page
+
+<img src="./utils/sign-in-page.png" alt="Sign In Page" width="400">
+
+---
+
+### Owner
+
+#### Dashboard
+
+##### Home
+
+<img src="./utils/owner-dashboard-home.png" alt="Owner Dashboard Home" width="400">
+
+---
+
+##### Listed Books (Empty)
+
+<img src="./utils/owner-dashboard-listed-books.png" alt="Owner Dashboard Listed Books Empty" width="400">
+
+---
+
+##### Add New Book Form (Empty)
+
+<img src="./utils/owner-dashboard-add-new-book.png" alt="Owner Dashboard Add Book Form" width="400">
+
+---
+
+
+##### Add New Book Form (Filled)
+
+<img src="./utils/owner-dashboard-add-new-book-filled.png" alt="Owner Dashboard Add Book Form Filled" width="400">
+
+---
+
+##### Listed Books (Added)
+
+<img src="./utils/owner-dashboard-listed-books-added.png" alt="Owner Dashboard Listed Books Added" width="400">
+
+---
+
+### Seeker
+
+#### Dashboard
+
+> No core functionality in seeker's dashboard yet!
+
+
+<img src="./utils/seeker-dashboard-home.png" alt="Seeker Dashboard Home" width="400">
+
+---
+
+<img src="./utils/seeker-dashboard-rented-books.png" alt="Seeker Dashboard Rented Books" width="400">
+
+---
+
+### Explore Page (Common for Owner & Seeker)
+
+<img src="./utils/explore-page.png" alt="Seeker Dashboard Rented Books" width="400">
+
+---
 
 ## Features
 
