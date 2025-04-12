@@ -144,6 +144,56 @@ export default function Dashboard() {
 
             {user.role === 'OWNER' ? (
                 <div className="space-y-8">
+                    {/* Owner's Book List */}
+                    <section>
+                        <h2 className="text-xl font-semibold mb-4">Your Listed Books</h2>
+                        {books.length === 0 ? (
+        <div className="text-center p-8 bg-gray-50 rounded-lg">
+            <p className="text-gray-500">No books listed yet. Add your first book to get started!</p>
+        </div>
+    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {books.map(book => (
+                                <div key={book.id} className="relative border p-4 rounded-lg">
+                                    {book.coverUrl && (
+                                        <img 
+                                            src={book.coverUrl} 
+                                            alt={book.title}
+                                            className="w-full h-48 object-cover mb-4 rounded"
+                                            loading="lazy"
+                                        />
+                                    )}
+                                    <div className="absolute top-2 right-2 space-x-2">
+                                        <button
+                                            onClick={() => {
+                                                setEditingBook(book);
+                                                setIsEditing(true);
+                                            }}
+                                            className="text-blue-500 hover:text-blue-700"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteBook(book.id)}
+                                            className="text-red-500 hover:text-red-700"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                    <h3 className="font-semibold text-lg">{book.title}</h3>
+                                    <p className="text-gray-600">{book.author}</p>
+                                    <div className="mt-2 text-sm">
+                                        <p>Genre: {book.genre || '-'}</p>
+                                        <p>Location: {book.city}</p>
+                                        <p>Status: {book.status}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+    )}</section>
+
+                    <hr />
+
                     {/* Add Book Form */}
                     <section className="bg-white p-6 rounded-lg shadow-sm">
                         <h2 className="text-xl font-semibold mb-4">Add New Book</h2>
@@ -218,48 +268,7 @@ export default function Dashboard() {
                         </form>
                     </section>
 
-                    {/* Owner's Book List */}
-                    <section>
-                        <h2 className="text-xl font-semibold mb-4">Your Listed Books</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {books.map(book => (
-                                <div key={book.id} className="relative border p-4 rounded-lg">
-                                    {book.coverUrl && (
-                                        <img 
-                                            src={book.coverUrl} 
-                                            alt={book.title}
-                                            className="w-full h-48 object-cover mb-4 rounded"
-                                            loading="lazy"
-                                        />
-                                    )}
-                                    <div className="absolute top-2 right-2 space-x-2">
-                                        <button
-                                            onClick={() => {
-                                                setEditingBook(book);
-                                                setIsEditing(true);
-                                            }}
-                                            className="text-blue-500 hover:text-blue-700"
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeleteBook(book.id)}
-                                            className="text-red-500 hover:text-red-700"
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                    <h3 className="font-semibold text-lg">{book.title}</h3>
-                                    <p className="text-gray-600">{book.author}</p>
-                                    <div className="mt-2 text-sm">
-                                        <p>Genre: {book.genre || '-'}</p>
-                                        <p>Location: {book.city}</p>
-                                        <p>Status: {book.status}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
+                    
 
                     {isEditing && (
                         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
