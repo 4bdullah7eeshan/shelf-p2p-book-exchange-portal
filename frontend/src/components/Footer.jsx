@@ -3,6 +3,7 @@ export default function Footer() {
       <footer className="bg-slate-50 text-black mt-auto">
         <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+            
             {/* About Section */}
             <div className="space-y-2 text-center md:text-center">
               <h3 className="text-lg font-semibold mb-4">About Fable Flow</h3>

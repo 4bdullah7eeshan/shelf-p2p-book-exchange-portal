@@ -7,6 +7,6 @@ const {
 const sessionRouter = Router();
 
 sessionRouter.post("/", signInAUser);
-sessionRouter.delete("/", signOutAUser);
+sessionRouter.delete("/", signOutAUser); // Not used
 
 module.exports = sessionRouter;
