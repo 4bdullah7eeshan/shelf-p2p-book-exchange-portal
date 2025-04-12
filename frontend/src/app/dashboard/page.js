@@ -172,7 +172,7 @@ export default function Dashboard() {
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {books.map(book => (
-                                    <div key={book.id} className="relative border p-4 rounded-lg hover:shadow-lg transition-shadow">
+                                    <div key={book.id} className="relative border rounded-lg hover:shadow-lg transition-shadow">
                                         <div className='relative mb-4'>
                                             {book.coverUrl && (
                                                 <img
@@ -183,14 +183,16 @@ export default function Dashboard() {
                                                 />
                                             )}
 
-                                            <h3 className="font-semibold text-lg">{book.title}</h3>
-                                            <p className="text-gray-600">{book.author}</p>
-                                            <div className="mt-2 text-sm">
+                                            <h3 className="font-semibold text-lg pl-4">{book.title}</h3>
+                                            <p className="text-gray-600 pl-4">{book.author}</p>
+                                            <div className="mt-2 text-sm pl-4">
                                                 <p>Genre: {book.genre || '-'}</p>
                                                 <p>Location: {book.city}</p>
                                                 <p>Status: {book.status}</p>
                                             </div>
-                                            <div className="flex justify-between align-center">
+
+                                            <hr />
+                                            <div className="flex justify-between align-center pl-4 pr-4">
                                                 <button
                                                     onClick={() => {
                                                         setEditingBook(book);
