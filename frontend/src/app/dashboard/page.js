@@ -17,29 +17,24 @@ export default function Dashboard() {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        const authToken = localStorage.getItem('authToken');
         const userData = JSON.parse(localStorage.getItem('user'));
         
-        if (!authToken || !userData) {
+        if (!userData) {
             router.push('/sign-in');
             return;
         }
 
         setUser(userData);
-        fetchBooks(userData.role, authToken);
+        fetchBooks(userData.role, userData.id);
     }, []);
 
-    const fetchBooks = async (role, token) => {
+    const fetchBooks = async (role, userId) => {
         try {
             const endpoint = role === 'OWNER' 
-                ? 'http://localhost:3001/v1/books/owner' 
-                : 'http://localhost:3001/v1/books/rented';
+                ? `http://localhost:3001/v1/books/owner?userId=${userId}` 
+                : `http://localhost:3001/v1/books/rented?userId=${userId}`;
 
-            const response = await fetch(endpoint, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const response = await fetch(endpoint);
 
             if (!response.ok) throw new Error('Failed to fetch books');
             
@@ -55,15 +50,19 @@ export default function Dashboard() {
     const handleAddBook = async (e) => {
         e.preventDefault();
         setLoading(true);
+        const user = JSON.parse(localStorage.getItem('user'));
+
         
         try {
             const response = await fetch('http://localhost:3001/v1/books', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                 },
-                body: JSON.stringify(newBook)
+                body: JSON.stringify({
+                    ...newBook,
+                    ownerId: user.id,
+                })
             });
 
             if (!response.ok) throw new Error('Failed to add book');

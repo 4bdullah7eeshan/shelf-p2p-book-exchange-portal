@@ -30,14 +30,14 @@ model Book {
   title String
   author String
   genre String // Make it enum?
-  coverUrl String
+  coverUrl String?
   status Status @default(AVAILABLE)
 
   city String
 
 
   // Relationships
-  ownerId Int @unique
+  ownerId Int
   owner User @relation("OwnedBooks", fields: [ownerId], references: [id])
 
   seekerId Int? 

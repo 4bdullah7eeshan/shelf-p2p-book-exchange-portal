@@ -10,11 +10,18 @@ const getAllBooks = asyncHandler(async (req, res) => {
 const createANewBook = asyncHandler(async (req, res) => {
     const newBookData = req.body;
 
+    if (!newBookData.ownerId) {
+        return res.status(400).json({ error: "Owner ID is required" });
+    }
+
     const newBook = await prismaClient.book.create({
         data: {
-            ...newBookData,
-            ownerId: req.user.id,
-            status: 'AVAILABLE',
+            title: newBookData.title,
+            author: newBookData.author,
+            genre: newBookData.genre,
+            city: newBookData.city,
+            ownerId: newBookData.ownerId,
+            status: 'AVAILABLE'
         }
     });
 
@@ -60,8 +67,10 @@ const deleteABook = asyncHandler(async (req, res) => {
 });
 
 const getOwnerBooks = asyncHandler(async (req, res) => {
+    const ownerId = parseInt(req.query.userId);
+
     const ownerBooks = await prismaClient.book.findMany({
-        where: { ownerId: req.user.id },
+        where: { ownerId },
         include: { owner: true }
     });
 
@@ -69,9 +78,11 @@ const getOwnerBooks = asyncHandler(async (req, res) => {
 });
 
 const getRentedBooksOfASeeker = asyncHandler(async (req, res) => {
+    const seekerId = parseInt(req.query.userId);
+
     const rentedBooks = await prismaClient.book.findMany({
         where: { 
-            seekerId: req.user.id,
+            seekerId,
             status: 'RENTED',
         },
         include: { 

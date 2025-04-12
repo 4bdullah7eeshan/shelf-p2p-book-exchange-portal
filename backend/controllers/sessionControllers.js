@@ -20,16 +20,12 @@ const signInAUser = asyncHandler(async (req, res) => {
         return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const userData = {
+    res.status(200).json({
         id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
         mobile: user.mobile
-    };
-
-    res.status(200).json({
-        user: userData,
     });
 
 });

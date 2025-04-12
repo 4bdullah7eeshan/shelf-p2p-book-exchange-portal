@@ -33,10 +33,10 @@ export default function SignIn() {
             }
 
             // Store user data
-            localStorage.setItem('user', JSON.stringify(data.user));
+            localStorage.setItem('user', JSON.stringify(data));
 
             // Redirect based on role
-            router.push(data.user.role === 'OWNER' ? '/dashboard' : '/browse'); // handle later
+            router.push(data.role === 'OWNER' ? '/dashboard' : '/dashboard'); // handle later
             
         } catch (err) {
             setError(err.message);
