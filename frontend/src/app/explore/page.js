@@ -36,6 +36,15 @@ export default function Explore() {
                             <h2 className="text-xl font-semibold">{book.title}</h2>
                             <p className="text-gray-600">{book.author}</p>
                         </div>
+
+                        {book.coverUrl && (
+    <img 
+        src={book.coverUrl} 
+        alt={book.title}
+        className="w-full h-48 object-cover mb-4 rounded"
+        loading="lazy"
+    />
+)}
                         
                         <div className="space-y-2 text-sm">
                             <div>

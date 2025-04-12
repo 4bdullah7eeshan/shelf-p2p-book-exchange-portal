@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { prismaClient } = require("../prisma/client");
+const { cloudinary } = require('../config/cloudinary');
 
 const getAllBooks = asyncHandler(async (req, res) => {
     const allBooks = await prismaClient.book.findMany({
@@ -24,6 +25,9 @@ const createANewBook = asyncHandler(async (req, res) => {
         return res.status(400).json({ error: "Owner ID is required" });
     }
 
+    const result = await cloudinary.uploader.upload(req.file.path);
+
+
     const newBook = await prismaClient.book.create({
         data: {
             title: newBookData.title,
@@ -31,7 +35,8 @@ const createANewBook = asyncHandler(async (req, res) => {
             genre: newBookData.genre,
             city: newBookData.city,
             ownerId: newBookData.ownerId,
-            status: 'AVAILABLE'
+            status: 'AVAILABLE',
+            coverUrl: result.secure_url
         }
     });
 

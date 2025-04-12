@@ -19,6 +19,9 @@ export default function Dashboard() {
     const [editingBook, setEditingBook] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
 
+    const [file, setFile] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
+
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('user'));
 
@@ -30,6 +33,16 @@ export default function Dashboard() {
         setUser(userData);
         fetchBooks(userData.role, userData.id);
     }, []);
+
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+            setFile(selectedFile);
+            const reader = new FileReader();
+            reader.onload = () => setPreviewUrl(reader.result);
+            reader.readAsDataURL(selectedFile);
+        }
+    };
 
     const fetchBooks = async (role, userId) => {
         try {
@@ -55,17 +68,18 @@ export default function Dashboard() {
         setLoading(true);
         const user = JSON.parse(localStorage.getItem('user'));
 
+        const formData = new FormData();
+        formData.append('title', newBook.title);
+        formData.append('author', newBook.author);
+        formData.append('genre', newBook.genre);
+        formData.append('city', newBook.city);
+        formData.append('ownerId', user.id);
+        if (file) formData.append('coverImage', file);
 
         try {
             const response = await fetch('http://localhost:3001/v1/books', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ...newBook,
-                    ownerId: user.id,
-                })
+                body: formData,
             });
 
             if (!response.ok) throw new Error('Failed to add book');
@@ -73,6 +87,8 @@ export default function Dashboard() {
             const data = await response.json();
             setBooks([...books, data]);
             setNewBook({ title: '', author: '', genre: '', city: '', contact: '' });
+            setFile(null);
+            setPreviewUrl(null);
         } catch (err) {
             setError(err.message);
         } finally {
@@ -172,6 +188,25 @@ export default function Dashboard() {
                                         onChange={(e) => setNewBook({ ...newBook, city: e.target.value })}
                                     />
                                 </div>
+
+                                <div>
+                                <label className="block mb-2">Cover Image</label>
+                                <div className="flex items-center gap-4">
+                                    <input
+                                        type="file"
+                                        onChange={handleFileChange}
+                                        accept="image/*"
+                                        className="w-full p-2 border rounded"
+                                    />
+                                    {previewUrl && (
+                                        <img
+                                            src={previewUrl}
+                                            alt="Preview"
+                                            className="w-20 h-20 object-cover rounded"
+                                        />
+                                    )}
+                                </div>
+                            </div>
                             </div>
                             <button
                                 type="submit"
@@ -189,6 +224,14 @@ export default function Dashboard() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {books.map(book => (
                                 <div key={book.id} className="relative border p-4 rounded-lg">
+                                    {book.coverUrl && (
+                                        <img 
+                                            src={book.coverUrl} 
+                                            alt={book.title}
+                                            className="w-full h-48 object-cover mb-4 rounded"
+                                            loading="lazy"
+                                        />
+                                    )}
                                     <div className="absolute top-2 right-2 space-x-2">
                                         <button
                                             onClick={() => {
@@ -327,6 +370,14 @@ export default function Dashboard() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {books.map(book => (
                             <div key={book.id} className="border p-4 rounded-lg">
+                                {book.coverUrl && (
+                                    <img 
+                                        src={book.coverUrl} 
+                                        alt={book.title}
+                                        className="w-full h-48 object-cover mb-4 rounded"
+                                        loading="lazy"
+                                    />
+                                )}
                                 <h3 className="font-semibold text-lg">{book.title}</h3>
                                 <p className="text-gray-600">{book.author}</p>
                                 <div className="mt-2 text-sm">
