@@ -11,28 +11,18 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
 
-  email String
+  email String @unique
   password String
-
-  // Relationships
-  profile Profile @relation(fields: [profileId], references: [id])
-  profileId Int @unique
-
-  ownedBooks Book[] @relation("OwnedBooks")
-  seekedBooks Book[] @relation("SeekedBooks")
-}
-
-model Profile {
-  id Int @id @default(autoincrement())
-
+  
   name String
   mobile String
   
   role Role
 
-  // Relationships
-  user User?
+  ownedBooks Book[] @relation("OwnedBooks")
+  seekedBooks Book[] @relation("SeekedBooks")
 }
+
 
 model Book {
   id Int @id @default(autoincrement())

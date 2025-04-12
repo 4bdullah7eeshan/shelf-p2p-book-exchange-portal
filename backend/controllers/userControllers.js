@@ -17,43 +17,24 @@ const createANewUser = asyncHandler(async (req, res) => {
 
     const hashedPassword = await bcryptjs.hash(newUserData.password, 10);
 
-    const result = await prismaClient.$transaction(async (prismaClient) => {
-        const profile = await prismaClient.profile.create({
-            data: {
-                name: newUserData.name,
-                mobile: newUserData.mobile,
-                role: newUserData.role,
-            },
-        });
-
-        const user = await prismaClient.user.create({
-            data: {
-                email: newUserData.email,
-                password: hashedPassword,
-                profileId: profile.id
-            },
-            include: { profile: true }
-        });
-
-        await prismaClient.profile.update({
-            where: { id: profile.id },
-            data: { userId: user.id }
-        });
-
-        return user;
+    const newUser = await prismaClient.user.create({
+        data: {
+            email: newUserData.email,
+            password: hashedPassword,
+            name: newUserData.name,
+            mobile: newUserData.mobile,
+            role: newUserData.role,
+        },
+        select: {
+            id: true,
+            email: true,
+            name: true,
+            mobile: true,
+            role: true
+        }
     });
 
-    const responseData = {
-        id: result.id,
-        email: result.email,
-        profile: {
-            name: result.profile.name,
-            mobile: result.profile.mobile,
-            role: result.profile.role
-        }
-    };
-
-    res.status(201).json(responseData);
+    res.status(201).json(newUser);
 });
 
 module.exports = {
