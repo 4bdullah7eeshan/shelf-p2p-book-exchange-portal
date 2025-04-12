@@ -1,6 +1,8 @@
 "use client";
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Link from 'next/link';
+
 
 export default function SignUp() {
     const router = useRouter();
@@ -45,11 +47,11 @@ export default function SignUp() {
 
     return (
         <div className="max-w-md mx-auto p-4">
-            <h1  className="text-2xl font-bold mb-4">Sign Up</h1>
+            <h1 className="text-2xl text-center font-bold mb-4">Sign Up</h1>
             {error && <div className="text-red-500 mb-4">{error}</div>}
 
             <p>Required fields are followed by <strong><span aria-label="required">*</span></strong>.</p>
-            
+
             <form onSubmit={handleSubmit} className="space-y-4">
                 <fieldset>
                     <p>
@@ -80,7 +82,7 @@ export default function SignUp() {
                         </select>
                     </p>
                 </fieldset>
-                
+
                 <p>
                     <button
                         type="submit"
@@ -91,6 +93,13 @@ export default function SignUp() {
                     </button>
                 </p>
             </form>
+
+            <p className="mt-4 text-center text-gray-600">
+                Already have an account?{' '}
+                <Link className="text-blue-500 hover:text-blue-700" href="/sign-in">
+                    Sign in
+                </Link>
+            </p>
         </div>
     );
 };
