@@ -19,14 +19,17 @@ const getAllBooks = asyncHandler(async (req, res) => {
 });
 
 const createANewBook = asyncHandler(async (req, res) => {
+    let coverUrl;
     const newBookData = req.body;
 
     if (!newBookData.ownerId) {
         return res.status(400).json({ error: "Owner ID is required" });
     }
 
-    const result = await cloudinary.uploader.upload(req.file.path);
-
+    if (req.file) {
+        const result = await cloudinary.uploader.upload(req.file.path);
+        coverUrl = result.secure_url;
+    }
 
     const newBook = await prismaClient.book.create({
         data: {
@@ -34,9 +37,9 @@ const createANewBook = asyncHandler(async (req, res) => {
             author: newBookData.author,
             genre: newBookData.genre,
             city: newBookData.city,
-            ownerId: newBookData.ownerId,
+            ownerId: parseInt(newBookData.ownerId),
             status: 'AVAILABLE',
-            coverUrl: result.secure_url
+            coverUrl: coverUrl,
         }
     });
 

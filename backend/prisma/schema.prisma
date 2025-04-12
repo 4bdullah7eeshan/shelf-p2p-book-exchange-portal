@@ -30,7 +30,7 @@ model Book {
   title String
   author String
   genre String // Make it enum?
-  coverUrl String?
+  coverUrl String? @default("https://cdn.pixabay.com/photo/2018/01/03/09/09/book-3057902_1280.png")
   status Status @default(AVAILABLE)
 
   city String
