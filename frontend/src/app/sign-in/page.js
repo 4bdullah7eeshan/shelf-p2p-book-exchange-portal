@@ -20,7 +20,7 @@ export default function SignIn() {
         };
 
         try {
-            const response = await fetch('http://localhost:3001/v1/sessions', {
+            const response = await fetch('https://shelf-p2p-book-exchange-portal.onrender.com/v1/sessions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

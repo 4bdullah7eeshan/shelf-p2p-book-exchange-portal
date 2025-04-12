@@ -20,7 +20,7 @@ export default function Explore() {
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const response = await fetch('http://localhost:3001/v1/books');
+                const response = await fetch('https://shelf-p2p-book-exchange-portal.onrender.com/v1/books');
                 if (!response.ok) throw new Error('Failed to fetch books');
                 const data = await response.json();
                 setBooks(data);

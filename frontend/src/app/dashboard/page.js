@@ -50,8 +50,8 @@ export default function Dashboard() {
     const fetchBooks = async (role, userId) => {
         try {
             const endpoint = role === 'OWNER'
-                ? `http://localhost:3001/v1/books/owner?userId=${userId}`
-                : `http://localhost:3001/v1/books/rented?userId=${userId}`;
+                ? `https://shelf-p2p-book-exchange-portal.onrender.com/v1/books/owner?userId=${userId}`
+                : `https://shelf-p2p-book-exchange-portal.onrender.com/v1/books/rented?userId=${userId}`;
 
             const response = await fetch(endpoint);
 
@@ -80,7 +80,7 @@ export default function Dashboard() {
         if (file) formData.append('coverImage', file);
 
         try {
-            const response = await fetch('http://localhost:3001/v1/books', {
+            const response = await fetch('https://shelf-p2p-book-exchange-portal.onrender.com/v1/books', {
                 method: 'POST',
                 body: formData,
             });
@@ -101,7 +101,7 @@ export default function Dashboard() {
 
     const handleUpdateBook = async (bookId, updatedData) => {
         try {
-            const response = await fetch(`http://localhost:3001/v1/books/${bookId}`, {
+            const response = await fetch(`https://shelf-p2p-book-exchange-portal.onrender.com/v1/books/${bookId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedData)
@@ -123,7 +123,7 @@ export default function Dashboard() {
         if (!confirm("Are you sure you want to delete this book?")) return;
 
         try {
-            const response = await fetch(`http://localhost:3001/v1/books/${bookId}`, {
+            const response = await fetch(`https://shelf-p2p-book-exchange-portal.onrender.com/v1/books/${bookId}`, {
                 method: 'DELETE'
             });
 
