@@ -6,35 +6,53 @@ const { prismaClient } = require("../prisma/client");
 const { JWT_SECRET } = require("../config");
 
 const signInAUser = asyncHandler(async (req, res) => {
-    const userProfileData = req.body;
+    const { email, password } = req.body;
 
-    const userProfileExists = await prismaClient.profile.findUnique({
-        where: {
-            email: userProfileData.email,
-        },
+    const user = await prismaClient.user.findUnique({
+        where: { email }
     });
 
-    if (!userProfileExists) {
-        throw new Error ("User does not exist");
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
     }
 
-    const passwordMatch = await bcrypt.compare(userProfileData.password, userProfileExists.password);
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-        throw new Error ("Invalid password");
+        return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    try {
-        const token = jwt.sign({ userProfileExists }, JWT_SECRET, { expiresIn: "1h" });
-        res.status(200).json({
-            token,
-            user: user,
-            expiresIn: 3600
-        });
-    } catch (err) {
-        console.error("Jwt error", err);
-        res.status(500).json({ message: "Authentication failed" });
-    }
+    // try {
+    //     const token = jwt.sign({ user }, JWT_SECRET, { expiresIn: "1h" });
+    //     res.status(200).json({
+    //         token,
+    //         user: user,
+    //         expiresIn: 3600
+    //     });
+    // } catch (err) {
+    //     console.error("Jwt error", err);
+    //     res.status(500).json({ message: "Authentication failed" });
+    // }
+
+    const token = jwt.sign(
+        { id: user.id, email: user.email, role: user.role },
+        JWT_SECRET,
+        { expiresIn: "1h" }
+    );
+
+    const userData = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        mobile: user.mobile
+    };
+
+    res.status(200).json({
+        token,
+        user: userData,
+        expiresIn: 3600
+    });
 
 });
 
