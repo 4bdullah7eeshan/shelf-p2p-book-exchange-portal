@@ -185,6 +185,7 @@ Create a `.env` file and setup the following:
 NODE_ENV="development"
 PORT=<> 
 DATABASE_URL="postgresql://<owner>:<password>@localhost:5432/<db_name>?schema=public"
+PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK=true
 
 CLOUDINARY_CLOUD_NAME=<>
 CLOUDINARY_API_KEY=<>
