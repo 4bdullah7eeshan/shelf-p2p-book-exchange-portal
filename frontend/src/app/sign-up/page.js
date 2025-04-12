@@ -1,4 +1,48 @@
+"use client";
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
 export default function SignUp() {
+    const router = useRouter();
+    const [error, setError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setError('');
+
+        const formData = {
+            name: e.currentTarget.user_full_name.value,
+            mobile: e.currentTarget.user_phone_number.value,
+            email: e.currentTarget.user_email.value,
+            password: e.currentTarget.user_password.value,
+            role: e.currentTarget.user_role.value.toUpperCase()
+        };
+
+        try {
+            const response = await fetch('/api/v1/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Registration failed');
+            }
+
+            router.push('/sign-in');
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return (
         <div>
             <h1>Sign Up</h1>
