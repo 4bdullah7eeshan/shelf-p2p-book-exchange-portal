@@ -21,7 +21,10 @@ export default function Explore() {
       useEffect(() => {
         const newSocket = io('https://shelf-p2p-book-exchange-portal.onrender.com', {
             withCredentials: true,
-            transports: ['websocket']
+            transports: ['websocket'],
+            upgrade: false,
+            reconnectionAttempts: 5,
+            path: '/socket.io/'
         });
         setSocket(newSocket);
 
