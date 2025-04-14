@@ -6,7 +6,10 @@ const app = require("./app");
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: [
+            "http://localhost:3000",
+            "https://shelf-p2p-book-exchange-portal.vercel.app/",
+        ],
         methods: ["GET", "POST"],
         credentials: true
     },
