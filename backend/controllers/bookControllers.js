@@ -52,6 +52,12 @@ const createANewBook = asyncHandler(async (req, res) => {
         },
     });
 
+    const io = req.app.get('io');
+
+    if (io) {
+        io.except(`user_${newBook.ownerId}`).emit('new-book', newBook);
+    }
+
     res.status(200).json(newBook);
 });
 
