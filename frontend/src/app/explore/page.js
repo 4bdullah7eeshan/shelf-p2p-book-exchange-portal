@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-
+import { io } from 'socket.io-client';
 
 export default function Explore() {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [socket, setSocket] = useState(null);
 
     const router = useRouter();
 
@@ -16,6 +17,18 @@ export default function Explore() {
           router.push('/');
         }
       }, [router]);
+
+      useEffect(() => {
+        const newSocket = io('https://shelf-p2p-book-exchange-portal.onrender.com', {
+            withCredentials: true,
+            transports: ['websocket']
+        });
+        setSocket(newSocket);
+
+        return () => {
+            if (newSocket) newSocket.disconnect();
+        };
+    }, []);
 
     useEffect(() => {
         const fetchBooks = async () => {
@@ -32,6 +45,29 @@ export default function Explore() {
         };
         fetchBooks();
     }, []);
+
+    useEffect(() => {
+        if (!socket) return;
+
+        const user = JSON.parse(localStorage.getItem('user'));
+        
+        if (user?.id) {
+            socket.emit('register', user.id);
+        }
+
+        socket.on('new-book', (newBook) => {
+            setBooks(prevBooks => [newBook, ...prevBooks]);
+        });
+
+        socket.on('connect_error', (err) => {
+            console.error('Socket connection error:', err);
+        });
+
+        return () => {
+            socket.off('new-book');
+            socket.off('connect_error');
+        };
+    }, [socket]);
 
     if (loading) return <div className="text-center p-4">Loading books...</div>;
     if (error) return <div className="text-red-500 p-4">Error: {error}</div>;
