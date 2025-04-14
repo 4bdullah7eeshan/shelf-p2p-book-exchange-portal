@@ -40,7 +40,16 @@ const createANewBook = asyncHandler(async (req, res) => {
             ownerId: parseInt(newBookData.ownerId),
             status: 'AVAILABLE',
             coverUrl: coverUrl,
-        }
+        },
+        include: {
+            owner: {
+                select: {
+                    name: true,
+                    email: true,
+                    mobile: true,
+                },
+            },
+        },
     });
 
     res.status(200).json(newBook);
