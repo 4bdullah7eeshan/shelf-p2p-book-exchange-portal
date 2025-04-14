@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
 });
 
 if (NODE_ENV != "test") {
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
         console.log(`Express app running on PORT: ${PORT}!`);
     });
 }
